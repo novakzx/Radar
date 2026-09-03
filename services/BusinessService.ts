@@ -5,7 +5,7 @@ import { normalizeBusinessName } from "@/lib/text";
 import { haversineDistanceMeters, metersToDegreeDelta } from "@/lib/geo";
 import { verifyWebsite } from "@/services/WebsiteVerificationService";
 import { calculateLeadScore } from "@/services/LeadScoringService";
-import { buildSocialUrl, type RawOverpassElement } from "@/services/PlacesService";
+import { extractOsmContactInfo, type RawOverpassElement } from "@/services/PlacesService";
 import type { IncomingBusiness } from "@/types/ingestion";
 import type { BusinessListItem, SourceWebsiteSignal } from "@/types/business";
 
@@ -164,14 +164,7 @@ export function extractWebsiteSignal(source: {
   if (source.source === "osm") {
     const element = source.rawPayload as unknown as RawOverpassElement;
     const tags = element?.tags ?? {};
-    return {
-      source: "osm",
-      website: tags.website ?? tags["contact:website"] ?? null,
-      socialMediaUrl:
-        buildSocialUrl(tags["contact:instagram"], "instagram.com") ??
-        buildSocialUrl(tags["contact:facebook"], "facebook.com") ??
-        null,
-    };
+    return { source: "osm", ...extractOsmContactInfo(tags) };
   }
 
   if (source.source === "google_places") {

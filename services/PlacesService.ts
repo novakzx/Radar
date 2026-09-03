@@ -5,7 +5,9 @@ import type { RawOverpassElement } from "@/lib/osm-mapping";
 export type { RawOverpassElement } from "@/lib/osm-mapping";
 export {
   buildSocialUrl,
+  extractOsmContactInfo,
   extractOsmPhotoUrl,
+  isSocialMediaUrl,
   mapOverpassElementToIncomingBusiness,
 } from "@/lib/osm-mapping";
 
