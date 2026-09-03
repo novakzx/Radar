@@ -11,7 +11,10 @@ export type AuditAction =
   | "lead.update"
   | "lead.status_change"
   | "search.completed"
-  | "leads.export";
+  | "leads.export"
+  | "payment.checkout_started"
+  | "payment.completed"
+  | "payment.failed";
 
 /**
  * Registra uma ação relevante para auditoria. Nunca lança erro para o

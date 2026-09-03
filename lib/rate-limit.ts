@@ -17,6 +17,7 @@ const LIMIT_CONFIG = {
   login: { max: 5, window: "15 m" as const },
   search: { max: 10, window: "1 h" as const },
   export: { max: 5, window: "1 h" as const },
+  checkout: { max: 8, window: "1 h" as const },
 };
 
 export type RateLimitKind = keyof typeof LIMIT_CONFIG;

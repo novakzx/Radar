@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
 import { DashboardNav } from "@/components/shared/dashboard-nav";
 import { verifySession } from "@/lib/dal";
+import { userHasPaidAccess } from "@/services/PaymentService";
+import { requiresPayment } from "@/lib/payment-gate";
 
 export default async function DashboardLayout({
   children,
@@ -8,6 +11,16 @@ export default async function DashboardLayout({
   children: ReactNode;
 }) {
   const session = await verifySession();
+
+  // Gate de pagamento: admin sempre passa; membro precisa ter pago os
+  // €2 (confirmado pelo webhook do Stripe — nunca por um valor vindo do
+  // client). Consultado fresco no banco a cada navegação, então o
+  // acesso é liberado assim que o webhook grava `hasPaid = true`, sem
+  // precisar de novo login.
+  const hasPaid = session.user.role === "admin" ? true : await userHasPaidAccess(session.user.id);
+  if (requiresPayment({ role: session.user.role, hasPaid })) {
+    redirect("/pagamento");
+  }
 
   return (
     <div className="min-h-screen bg-background">

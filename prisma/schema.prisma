@@ -52,12 +52,20 @@ enum BusinessSourceType {
   google_places
 }
 
+enum PaymentStatus {
+  pending
+  paid
+  failed
+}
+
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  passwordHash String   @map("password_hash")
-  role         Role     @default(member)
-  createdAt    DateTime @default(now()) @map("created_at")
+  id               String   @id @default(cuid())
+  email            String   @unique
+  passwordHash     String   @map("password_hash")
+  role             Role     @default(member)
+  createdAt        DateTime @default(now()) @map("created_at")
+  hasPaid          Boolean  @default(false) @map("has_paid")
+  stripeCustomerId String?  @map("stripe_customer_id")
 
   leads         Lead[]
   leadNotes     LeadNote[]
@@ -65,8 +73,40 @@ model User {
   auditLogs     AuditLog[]
   teamMessages  TeamMessage[]
   teamReminders TeamReminder[]
+  payments      Payment[]
 
   @@map("users")
+}
+
+/// Pagamento único (€2) que libera o acesso aos painéis. O acesso só é
+/// concedido (User.hasPaid = true) quando o webhook do Stripe confirma
+/// o evento `checkout.session.completed` com assinatura válida — nunca
+/// pelo redirect de sucesso no navegador, que pode ser forjado.
+model Payment {
+  id                      String        @id @default(cuid())
+  userId                  String        @map("user_id")
+  stripeCheckoutSessionId String        @unique @map("stripe_checkout_session_id")
+  stripePaymentIntentId   String?       @map("stripe_payment_intent_id")
+  amount                  Int
+  currency                String        @default("eur")
+  status                  PaymentStatus @default(pending)
+  createdAt               DateTime      @default(now()) @map("created_at")
+  paidAt                  DateTime?     @map("paid_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("payments")
+}
+
+/// Registro de eventos de webhook do Stripe já processados — garante
+/// idempotência (o Stripe pode reenviar o mesmo evento mais de uma vez).
+model StripeWebhookEvent {
+  id          String   @id
+  type        String
+  processedAt DateTime @default(now()) @map("processed_at")
+
+  @@map("stripe_webhook_events")
 }
 
 model Business {
