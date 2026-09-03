@@ -67,14 +67,8 @@ export function Hero() {
         className="flex flex-wrap items-center justify-center gap-4"
       >
         <MagneticButton
-          href="/register"
-          className="inline-flex h-12 items-center justify-center rounded-full bg-signal-blue px-7 text-sm font-semibold text-white shadow-[0_0_30px_-4px_rgba(0,122,252,0.6)] transition-colors hover:bg-deep-signal"
-        >
-          Criar conta grátis
-        </MagneticButton>
-        <MagneticButton
           href="/login"
-          className="inline-flex h-12 items-center justify-center rounded-full border border-silver/50 bg-transparent px-7 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/5"
+          className="inline-flex h-12 items-center justify-center rounded-full bg-signal-blue px-7 text-sm font-semibold text-white shadow-[0_0_30px_-4px_rgba(0,122,252,0.6)] transition-colors hover:bg-deep-signal"
         >
           Entrar
         </MagneticButton>

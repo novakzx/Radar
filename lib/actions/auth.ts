@@ -3,9 +3,7 @@
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import { signIn, signOut } from "@/auth";
-import { registerUser } from "@/services/AuthService";
-import { createAndSendVerificationCode } from "@/services/EmailVerificationService";
-import { loginSchema, registerSchema } from "@/lib/validation/auth";
+import { loginSchema } from "@/lib/validation/auth";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/client-ip";
 
@@ -15,48 +13,6 @@ export type AuthFormState =
       message?: string;
     }
   | undefined;
-
-export async function registerAction(
-  _prevState: AuthFormState,
-  formData: FormData,
-): Promise<AuthFormState> {
-  const validated = registerSchema.safeParse({
-    email: formData.get("email"),
-    password: formData.get("password"),
-  });
-
-  if (!validated.success) {
-    return { errors: validated.error.flatten().fieldErrors };
-  }
-
-  const result = await registerUser(validated.data);
-  if (!result.ok) {
-    return { message: result.error };
-  }
-
-  // Após criar a conta, autentica automaticamente e envia para o dashboard.
-  try {
-    await signIn("credentials", {
-      email: validated.data.email,
-      password: validated.data.password,
-      redirect: false,
-    });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      return {
-        message:
-          "Conta criada, mas não foi possível entrar automaticamente. Faça login manualmente.",
-      };
-    }
-    throw error;
-  }
-
-  // Cadastro exige confirmação do e-mail antes de liberar o dashboard
-  // (o gate real fica em app/(dashboard)/layout.tsx — este redirect é
-  // só a experiência natural logo após criar a conta).
-  await createAndSendVerificationCode(result.userId, validated.data.email);
-  redirect("/verificar-email");
-}
 
 export async function loginAction(
   _prevState: AuthFormState,

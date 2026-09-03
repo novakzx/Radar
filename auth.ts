@@ -40,6 +40,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
+        // Site fechado para uso pessoal: só a conta admin pode entrar.
+        // Mensagem de erro genérica de propósito — não revela que a
+        // senha estava certa mas o acesso foi negado por outro motivo.
+        if (user.role !== "admin") {
+          await logAuditEvent({
+            userId: user.id,
+            action: "auth.login_failed",
+            entity: "user",
+            entityId: user.id,
+            metadata: { reason: "not_admin" },
+          });
+          return null;
+        }
+
         return { id: user.id, email: user.email, role: user.role };
       },
     }),

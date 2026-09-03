@@ -25,9 +25,6 @@ export function LandingFooter() {
           <Link href="/login" className="hover:text-foreground">
             Entrar
           </Link>
-          <Link href="/register" className="hover:text-foreground">
-            Criar conta
-          </Link>
         </div>
       </div>
     </footer>

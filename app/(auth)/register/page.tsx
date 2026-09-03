@@ -1,22 +1,28 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { RegisterForm } from "@/components/shared/register-form";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Criar conta",
+  title: "Cadastro fechado",
 };
 
+/**
+ * Cadastro público fechado — este é um sistema de uso restrito (ver
+ * auth.ts: só a conta admin pode entrar). A rota continua existindo
+ * (em vez de virar 404) só pra mostrar isso com clareza.
+ */
 export default function RegisterPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Criar conta</CardTitle>
-        <CardDescription>
-          Crie sua conta de equipe comercial para começar a prospectar.
-        </CardDescription>
+        <CardTitle>Cadastro fechado</CardTitle>
+        <CardDescription>Este é um sistema de uso restrito — não há cadastro público.</CardDescription>
       </CardHeader>
       <CardContent>
-        <RegisterForm />
+        <Button render={<Link href="/login" />} nativeButton={false} className="w-full">
+          Ir para o login
+        </Button>
       </CardContent>
     </Card>
   );

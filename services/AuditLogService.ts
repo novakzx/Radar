@@ -15,7 +15,6 @@ export type AuditAction =
   | "payment.checkout_started"
   | "payment.completed"
   | "payment.failed"
-  | "auth.email_verified"
   | "ticket.create"
   | "ticket.claim"
   | "ticket.resolve";

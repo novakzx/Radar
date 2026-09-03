@@ -6,21 +6,16 @@ export function FinalCtaSection() {
     <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-32 text-center">
       <ScrollReveal>
         <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-          Comece a prospectar com dados reais hoje.
+          Prospecção com dados reais.
         </h2>
-      </ScrollReveal>
-      <ScrollReveal delay={0.15}>
-        <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-          Gratuito para começar. Sem necessidade de cartão de crédito.
-        </p>
       </ScrollReveal>
       <ScrollReveal delay={0.3}>
         <div className="mt-8 flex justify-center">
           <MagneticButton
-            href="/register"
-            className="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
+            href="/login"
+            className="inline-flex h-12 items-center justify-center rounded-full bg-signal-blue px-8 text-sm font-semibold text-white shadow-[0_0_30px_-4px_rgba(0,122,252,0.6)] transition-colors hover:bg-deep-signal"
           >
-            Criar conta grátis
+            Entrar
           </MagneticButton>
         </div>
       </ScrollReveal>
