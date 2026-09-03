@@ -3,7 +3,7 @@ import { MagneticButton } from "@/components/landing/magnetic-button";
 
 export function FinalCtaSection() {
   return (
-    <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+    <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-32 text-center">
       <ScrollReveal>
         <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
           Comece a prospectar com dados reais hoje.

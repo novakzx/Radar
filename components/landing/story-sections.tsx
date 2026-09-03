@@ -3,7 +3,7 @@ import { ScrollReveal } from "@/components/landing/scroll-reveal";
 
 export function ProblemSection() {
   return (
-    <section className="mx-auto max-w-4xl px-6 py-24">
+    <section className="mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-24">
       <ScrollReveal>
         <p className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
           O problema
@@ -58,7 +58,7 @@ const STEPS = [
 
 export function HowItWorksSection() {
   return (
-    <section className="mx-auto max-w-5xl px-6 py-24">
+    <section className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-24">
       <ScrollReveal>
         <p className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
           Como funciona
@@ -87,7 +87,7 @@ export function HowItWorksSection() {
 
 export function TrustSection() {
   return (
-    <section className="mx-auto max-w-4xl px-6 py-24">
+    <section className="mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-24">
       <div className="grid gap-8 sm:grid-cols-2">
         <ScrollReveal>
           <div className="flex items-start gap-3">

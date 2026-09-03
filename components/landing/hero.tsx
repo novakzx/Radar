@@ -26,7 +26,7 @@ const line = {
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-screen flex-col items-center justify-center gap-10 overflow-hidden px-6 py-24 text-center">
+    <section className="relative flex flex-col items-center justify-center gap-6 overflow-hidden px-4 py-16 text-center sm:min-h-screen sm:gap-10 sm:px-6 sm:py-24">
       <span className="text-xs font-medium uppercase tracking-[0.3em] text-muted-foreground">
         CodeVision Radar
       </span>
@@ -35,7 +35,7 @@ export function Hero() {
         initial="hidden"
         animate="visible"
         variants={container}
-        className="max-w-3xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl md:text-6xl"
+        className="max-w-3xl text-[1.65rem] leading-tight font-semibold tracking-tight text-balance sm:text-5xl sm:leading-[1.1] md:text-6xl"
       >
         {HEADLINE_LINES.map((text) => (
           <span key={text} className="block overflow-hidden pb-1">
