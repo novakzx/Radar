@@ -11,6 +11,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+// A busca roda em background via after() dentro da Server Action
+// (createSearchAction) chamada nesta página — precisa de mais que os
+// 10s padrão para buscas com muitos resultados. 60s é compatível com
+// o plano Hobby da Vercel; aumente se estiver num plano Pro/Enterprise.
+export const maxDuration = 60;
+
 export default async function RadarPage() {
   const session = await verifySession();
 

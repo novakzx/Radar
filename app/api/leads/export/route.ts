@@ -5,6 +5,9 @@ import { getLeadsByIds } from "@/services/LeadService";
 import { generateLeadsCsv, generateLeadsXlsx } from "@/services/ExportService";
 import { logAuditEvent } from "@/services/AuditLogService";
 
+// Margem extra para exportações com muitos leads (geração de .xlsx).
+export const maxDuration = 30;
+
 export async function GET(request: Request) {
   const session = await auth();
   if (!session?.user) {
