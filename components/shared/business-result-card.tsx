@@ -1,4 +1,4 @@
-import { ExternalLink, Phone, Star } from "lucide-react";
+import { AtSign, ExternalLink, Phone, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SaveLeadButton } from "@/components/shared/save-lead-button";
@@ -32,6 +32,17 @@ export function BusinessResultCard({ business }: { business: BusinessListItem })
 
   return (
     <Card>
+      {business.photoUrl && (
+        // URL de foto vem de fontes externas arbitrárias (OSM/Wikimedia/proxy do Google);
+        // next/image exigiria permitir esses domínios previamente, o que não é viável aqui.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={business.photoUrl}
+          alt={`Foto de ${business.name}`}
+          className="h-32 w-full rounded-t-xl object-cover"
+          loading="lazy"
+        />
+      )}
       <CardHeader>
         <CardTitle className="text-base">{business.name}</CardTitle>
         <p className="text-xs text-muted-foreground">
@@ -91,6 +102,17 @@ export function BusinessResultCard({ business }: { business: BusinessListItem })
             >
               <ExternalLink className="size-3" />
               site
+            </a>
+          )}
+          {websiteVerification.socialMediaUrl && (
+            <a
+              href={websiteVerification.socialMediaUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1 underline underline-offset-2"
+            >
+              <AtSign className="size-3" />
+              rede social
             </a>
           )}
         </div>

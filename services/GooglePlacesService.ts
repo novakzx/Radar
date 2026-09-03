@@ -42,6 +42,7 @@ interface PlaceDetailsResult {
   formatted_address?: string;
   rating?: number;
   user_ratings_total?: number;
+  photos?: { photo_reference: string }[];
 }
 
 export interface GooglePlacesSearchParams {
@@ -90,6 +91,7 @@ export async function fetchBusinessesFromGooglePlaces(
 
   for (const place of results) {
     const details = await fetchPlaceDetails(place.place_id, apiKey);
+    const photoReference = details?.photos?.[0]?.photo_reference ?? null;
     incoming.push({
       source: "google_places",
       sourceId: place.place_id,
@@ -102,6 +104,10 @@ export async function fetchBusinessesFromGooglePlaces(
       phone: details?.formatted_phone_number ?? null,
       website: details?.website ?? null,
       socialMediaUrl: null,
+      // Nunca expõe a chave da API ao client: a URL aponta para o
+      // nosso próprio proxy (app/api/photos/google), que busca a
+      // imagem no servidor usando GOOGLE_PLACES_API_KEY.
+      photoUrl: photoReference ? `/api/photos/google?ref=${encodeURIComponent(photoReference)}` : null,
       rating: details?.rating ?? null,
       reviewCount: details?.user_ratings_total ?? null,
       isIndependent: null,
@@ -120,7 +126,7 @@ async function fetchPlaceDetails(
   url.searchParams.set("place_id", placeId);
   url.searchParams.set(
     "fields",
-    "place_id,name,website,formatted_phone_number,formatted_address,rating,user_ratings_total",
+    "place_id,name,website,formatted_phone_number,formatted_address,rating,user_ratings_total,photos",
   );
   url.searchParams.set("key", apiKey);
 

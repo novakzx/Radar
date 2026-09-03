@@ -10,7 +10,7 @@ const cspHeader = `
   default-src 'self';
   script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""};
   style-src 'self' 'unsafe-inline';
-  img-src 'self' blob: data: https://api.mapbox.com https://*.tiles.mapbox.com;
+  img-src 'self' blob: data: https:;
   font-src 'self' data:;
   connect-src 'self' https://api.mapbox.com https://events.mapbox.com https://*.tiles.mapbox.com;
   worker-src 'self' blob:;

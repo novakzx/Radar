@@ -13,6 +13,7 @@ export interface IncomingBusiness {
   phone: string | null;
   website: string | null;
   socialMediaUrl: string | null;
+  photoUrl: string | null;
   rating: number | null;
   reviewCount: number | null;
   isIndependent: boolean | null;

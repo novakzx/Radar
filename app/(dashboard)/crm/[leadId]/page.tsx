@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, Phone, Star } from "lucide-react";
+import { ArrowLeft, AtSign, ExternalLink, Phone, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -49,12 +49,22 @@ export default async function LeadDetailPage(props: PageProps<"/crm/[leadId]">) 
       </Link>
 
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{business.name}</h1>
-          <p className="text-muted-foreground">
-            {business.category ?? "Categoria não informada"} ·{" "}
-            {[business.address, business.city].filter(Boolean).join(", ") || "Endereço não informado"}
-          </p>
+        <div className="flex items-start gap-4">
+          {business.photoUrl && (
+            // eslint-disable-next-line @next/next/no-img-element -- domínio da foto é arbitrário
+            <img
+              src={business.photoUrl}
+              alt={`Foto de ${business.name}`}
+              className="size-20 shrink-0 rounded-lg object-cover"
+            />
+          )}
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight">{business.name}</h1>
+            <p className="text-muted-foreground">
+              {business.category ?? "Categoria não informada"} ·{" "}
+              {[business.address, business.city].filter(Boolean).join(", ") || "Endereço não informado"}
+            </p>
+          </div>
         </div>
         <LeadStatusSelect leadId={lead.id} status={lead.status} />
       </div>
@@ -98,6 +108,17 @@ export default async function LeadDetailPage(props: PageProps<"/crm/[leadId]">) 
                 >
                   <ExternalLink className="size-3.5" />
                   {business.websiteVerification.website}
+                </a>
+              )}
+              {business.websiteVerification.socialMediaUrl && (
+                <a
+                  href={business.websiteVerification.socialMediaUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1 underline underline-offset-2"
+                >
+                  <AtSign className="size-3.5" />
+                  {business.websiteVerification.socialMediaUrl}
                 </a>
               )}
             </CardContent>

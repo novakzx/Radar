@@ -59,10 +59,12 @@ model User {
   role         Role     @default(member)
   createdAt    DateTime @default(now()) @map("created_at")
 
-  leads      Lead[]
-  leadNotes  LeadNote[]
-  searches   Search[]
-  auditLogs  AuditLog[]
+  leads         Lead[]
+  leadNotes     LeadNote[]
+  searches      Search[]
+  auditLogs     AuditLog[]
+  teamMessages  TeamMessage[]
+  teamReminders TeamReminder[]
 
   @@map("users")
 }
@@ -77,6 +79,7 @@ model Business {
   lng           Float?
   phone         String?
   website       String?
+  photoUrl      String?  @map("photo_url")
   rating        Float?
   reviewCount   Int?     @map("review_count")
   isIndependent Boolean? @map("is_independent")
@@ -194,4 +197,33 @@ model AuditLog {
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("audit_logs")
+}
+
+/// Mural/chat interno da equipe (página Equipe).
+model TeamMessage {
+  id        String   @id @default(cuid())
+  authorId  String   @map("author_id")
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@map("team_messages")
+}
+
+/// Lembretes/tarefas rápidas ("prompts") que qualquer membro da equipe
+/// pode criar e marcar como concluído.
+model TeamReminder {
+  id        String    @id @default(cuid())
+  authorId  String    @map("author_id")
+  content   String
+  done      Boolean   @default(false)
+  doneAt    DateTime? @map("done_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([done])
+  @@map("team_reminders")
 }

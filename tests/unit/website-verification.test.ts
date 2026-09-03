@@ -33,6 +33,7 @@ describe("verifyWebsite", () => {
       website: "https://barbearia-exemplo.pt",
       confidence: "alta",
       hasSocialMedia: false,
+      socialMediaUrl: null,
     });
   });
 
@@ -44,12 +45,19 @@ describe("verifyWebsite", () => {
     expect(result.found).toBe(false);
     expect(result.confidence).toBe("media");
     expect(result.hasSocialMedia).toBe(true);
+    expect(result.socialMediaUrl).toBe("https://instagram.com/barbearia");
   });
 
   it("🔴 baixa: nenhuma fonte retorna website nem rede social", () => {
     const signals: SourceWebsiteSignal[] = [{ source: "osm", website: null, socialMediaUrl: null }];
     const result = verifyWebsite(signals);
-    expect(result).toEqual({ found: false, website: null, confidence: "baixa", hasSocialMedia: false });
+    expect(result).toEqual({
+      found: false,
+      website: null,
+      confidence: "baixa",
+      hasSocialMedia: false,
+      socialMediaUrl: null,
+    });
   });
 
   it("🔴 baixa: fontes diferentes discordam sobre qual é o website", () => {
@@ -79,7 +87,15 @@ describe("verifyWebsite", () => {
       website: null,
       confidence: "baixa",
       hasSocialMedia: false,
+      socialMediaUrl: null,
     });
+  });
+
+  it("expõe a URL real da rede social quando disponível", () => {
+    const result = verifyWebsite([
+      { source: "osm", website: null, socialMediaUrl: "https://facebook.com/barbearia" },
+    ]);
+    expect(result.socialMediaUrl).toBe("https://facebook.com/barbearia");
   });
 
   it("é determinística: mesma entrada produz sempre a mesma saída", () => {

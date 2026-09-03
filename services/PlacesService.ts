@@ -1,15 +1,13 @@
 import "server-only";
 import { resolveOsmTagFilters } from "@/lib/osm-categories";
-import type { IncomingBusiness } from "@/types/ingestion";
+import type { RawOverpassElement } from "@/lib/osm-mapping";
 
-export interface RawOverpassElement {
-  type: "node" | "way" | "relation";
-  id: number;
-  lat?: number;
-  lon?: number;
-  center?: { lat: number; lon: number };
-  tags?: Record<string, string>;
-}
+export type { RawOverpassElement } from "@/lib/osm-mapping";
+export {
+  buildSocialUrl,
+  extractOsmPhotoUrl,
+  mapOverpassElementToIncomingBusiness,
+} from "@/lib/osm-mapping";
 
 export interface OverpassSearchParams {
   lat: number;
@@ -87,61 +85,4 @@ function buildOverpassQuery(params: OverpassSearchParams): string {
 function escapeOverpassRegexTerm(value: string): string {
   // Remove aspas e barras invertidas para não quebrar a query Overpass.
   return value.trim().replace(/["\\]/g, "");
-}
-
-/** Converte um elemento bruto do Overpass no formato comum de ingestão. */
-export function mapOverpassElementToIncomingBusiness(
-  element: RawOverpassElement,
-): IncomingBusiness | null {
-  const tags = element.tags ?? {};
-  const name = tags.name?.trim();
-  if (!name) return null;
-
-  const lat = element.lat ?? element.center?.lat ?? null;
-  const lng = element.lon ?? element.center?.lon ?? null;
-
-  const website = tags.website ?? tags["contact:website"] ?? null;
-  const phone = tags.phone ?? tags["contact:phone"] ?? null;
-  const socialMediaUrl =
-    buildSocialUrl(tags["contact:instagram"], "instagram.com") ??
-    buildSocialUrl(tags["contact:facebook"], "facebook.com") ??
-    null;
-
-  const category = tags.shop ?? tags.amenity ?? tags.office ?? tags.leisure ?? null;
-
-  const addressParts = [tags["addr:street"], tags["addr:housenumber"]].filter(
-    (part): part is string => !!part,
-  );
-  const address = addressParts.length > 0 ? addressParts.join(", ") : null;
-  const city = tags["addr:city"] ?? null;
-
-  // Heurística determinística: presença de `brand`/`operator` indica
-  // rede ou franquia; ausência sugere negócio local independente.
-  const isIndependent = !(tags.brand || tags.operator);
-
-  return {
-    source: "osm",
-    sourceId: `${element.type}/${element.id}`,
-    name,
-    category,
-    address,
-    city,
-    lat,
-    lng,
-    phone: phone ?? null,
-    website: website ?? null,
-    socialMediaUrl,
-    rating: null,
-    reviewCount: null,
-    isIndependent,
-    rawPayload: element as unknown,
-  };
-}
-
-export function buildSocialUrl(handleOrUrl: string | undefined, domain: string): string | null {
-  if (!handleOrUrl) return null;
-  const trimmed = handleOrUrl.trim();
-  if (!trimmed) return null;
-  if (/^https?:\/\//i.test(trimmed)) return trimmed;
-  return `https://${domain}/${trimmed.replace(/^@/, "")}`;
 }

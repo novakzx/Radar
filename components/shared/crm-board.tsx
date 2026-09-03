@@ -2,12 +2,19 @@
 
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
-import { Download, FileSpreadsheet } from "lucide-react";
+import { Download, FileSpreadsheet, GripVertical } from "lucide-react";
 import type { LeadStatus } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { moveLeadAction } from "@/lib/actions/leads";
 import { LEAD_STATUS_LABELS, LEAD_STATUS_ORDER } from "@/types/lead";
 import type { LeadBoardItem } from "@/types/lead";
@@ -34,12 +41,7 @@ export function CrmBoard({ initialBoard }: CrmBoardProps) {
     });
   }
 
-  function handleDrop(status: LeadStatus) {
-    setDragOverStatus(null);
-    const leadId = draggingId;
-    setDraggingId(null);
-    if (!leadId) return;
-
+  function moveLead(leadId: string, status: LeadStatus) {
     setBoard((current) => {
       let moved: LeadBoardItem | undefined;
       const next: Record<LeadStatus, LeadBoardItem[]> = { ...current };
@@ -106,7 +108,10 @@ export function CrmBoard({ initialBoard }: CrmBoardProps) {
             onDragLeave={() => setDragOverStatus((current) => (current === status ? null : current))}
             onDrop={(event) => {
               event.preventDefault();
-              handleDrop(status);
+              setDragOverStatus(null);
+              const leadId = draggingId;
+              setDraggingId(null);
+              if (leadId) moveLead(leadId, status);
             }}
             className={cn(
               "flex min-h-[200px] flex-col gap-2 rounded-lg border border-border bg-card/50 p-3 transition-colors",
@@ -131,13 +136,20 @@ export function CrmBoard({ initialBoard }: CrmBoardProps) {
                   )}
                 >
                   <div className="mb-1 flex items-start justify-between gap-2">
-                    <Link href={`/crm/${lead.id}`} className="font-medium leading-tight hover:underline">
+                    <Link
+                      href={`/crm/${lead.id}`}
+                      draggable={false}
+                      className="font-medium leading-tight hover:underline"
+                    >
                       {lead.business.name}
                     </Link>
-                    <Checkbox
-                      checked={selected.has(lead.id)}
-                      onCheckedChange={(checked) => toggleSelected(lead.id, checked === true)}
-                    />
+                    <div className="flex shrink-0 items-center gap-1">
+                      <Checkbox
+                        checked={selected.has(lead.id)}
+                        onCheckedChange={(checked) => toggleSelected(lead.id, checked === true)}
+                      />
+                      <GripVertical className="size-3.5 text-muted-foreground" aria-hidden />
+                    </div>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {lead.business.category ?? "Sem categoria"}
@@ -153,6 +165,20 @@ export function CrmBoard({ initialBoard }: CrmBoardProps) {
                       </span>
                     )}
                   </div>
+
+                  {/* Alternativa ao arrastar (touch/mobile não suportam drag-and-drop nativo) */}
+                  <Select value={status} onValueChange={(value) => value && moveLead(lead.id, value as LeadStatus)}>
+                    <SelectTrigger className="mt-2 h-7 w-full text-xs" onPointerDown={(e) => e.stopPropagation()}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {LEAD_STATUS_ORDER.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {LEAD_STATUS_LABELS[option]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               ))}
             </div>

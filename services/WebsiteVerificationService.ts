@@ -36,21 +36,27 @@ export function verifyWebsite(signals: SourceWebsiteSignal[]): WebsiteVerificati
     .filter((url): url is string => url !== null);
 
   const distinctUrls = Array.from(new Set(normalizedUrls));
-  const hasSocialMedia = signals.some((signal) => !!signal.socialMediaUrl?.trim());
+
+  const socialMediaUrls = signals
+    .map((signal) => signal.socialMediaUrl?.trim())
+    .filter((url): url is string => !!url);
+  const hasSocialMedia = socialMediaUrls.length > 0;
+  // Entre múltiplas fontes, prioriza a primeira (ordem determinística de entrada).
+  const socialMediaUrl = socialMediaUrls[0] ?? null;
 
   if (distinctUrls.length === 1) {
-    return { found: true, website: distinctUrls[0], confidence: "alta", hasSocialMedia };
+    return { found: true, website: distinctUrls[0], confidence: "alta", hasSocialMedia, socialMediaUrl };
   }
 
   if (distinctUrls.length > 1) {
-    return { found: false, website: null, confidence: "baixa", hasSocialMedia };
+    return { found: false, website: null, confidence: "baixa", hasSocialMedia, socialMediaUrl };
   }
 
   if (hasSocialMedia) {
-    return { found: false, website: null, confidence: "media", hasSocialMedia };
+    return { found: false, website: null, confidence: "media", hasSocialMedia, socialMediaUrl };
   }
 
-  return { found: false, website: null, confidence: "baixa", hasSocialMedia };
+  return { found: false, website: null, confidence: "baixa", hasSocialMedia, socialMediaUrl };
 }
 
 /** Rótulo de UI: nunca afirma ausência real de site, só ausência na fonte consultada. */

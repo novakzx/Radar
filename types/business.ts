@@ -34,6 +34,8 @@ export interface WebsiteVerificationResult {
   website: string | null;
   confidence: WebsiteConfidence;
   hasSocialMedia: boolean;
+  /** URL real da rede social (Instagram/Facebook), quando disponível na fonte. */
+  socialMediaUrl: string | null;
 }
 
 /** DTO de exibição (card/lista/mapa/detalhe) — seguro para uso no client. */
@@ -46,6 +48,7 @@ export interface BusinessListItem {
   lat: number | null;
   lng: number | null;
   phone: string | null;
+  photoUrl: string | null;
   rating: number | null;
   reviewCount: number | null;
   isIndependent: boolean | null;

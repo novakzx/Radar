@@ -13,10 +13,17 @@ function makeBusiness(overrides: Partial<BusinessListItem>): BusinessListItem {
     lat: null,
     lng: null,
     phone: null,
+    photoUrl: null,
     rating: null,
     reviewCount: null,
     isIndependent: null,
-    websiteVerification: { found: false, website: null, confidence: "baixa", hasSocialMedia: false },
+    websiteVerification: {
+      found: false,
+      website: null,
+      confidence: "baixa",
+      hasSocialMedia: false,
+      socialMediaUrl: null,
+    },
     leadScore: { total: 0, breakdown: [], classification: "baixo" },
     lastVerifiedAt: null,
     sourcesConsulted: ["osm"],
@@ -61,14 +68,26 @@ describe("sortResults", () => {
 describe("applyResultFilters", () => {
   const found = makeBusiness({
     id: "found",
-    websiteVerification: { found: true, website: "https://x.pt", confidence: "alta", hasSocialMedia: false },
+    websiteVerification: {
+      found: true,
+      website: "https://x.pt",
+      confidence: "alta",
+      hasSocialMedia: false,
+      socialMediaUrl: null,
+    },
     rating: 4.5,
     phone: "123",
     isIndependent: false,
   });
   const notFound = makeBusiness({
     id: "not-found",
-    websiteVerification: { found: false, website: null, confidence: "baixa", hasSocialMedia: false },
+    websiteVerification: {
+      found: false,
+      website: null,
+      confidence: "baixa",
+      hasSocialMedia: false,
+      socialMediaUrl: null,
+    },
     rating: 3.0,
     phone: null,
     isIndependent: true,

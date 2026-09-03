@@ -73,6 +73,7 @@ export async function upsertBusinessFromSource(
       lng: incoming.lng,
       phone: incoming.phone,
       website: null,
+      photoUrl: incoming.photoUrl,
       rating: incoming.rating,
       reviewCount: incoming.reviewCount,
       isIndependent: incoming.isIndependent,
@@ -128,6 +129,7 @@ async function applyIncomingFields(businessId: string, incoming: IncomingBusines
   if (incoming.address) data.address = incoming.address;
   if (incoming.city) data.city = incoming.city;
   if (incoming.phone) data.phone = incoming.phone;
+  if (incoming.photoUrl) data.photoUrl = incoming.photoUrl;
   if (incoming.rating != null) data.rating = incoming.rating;
   if (incoming.reviewCount != null) data.reviewCount = incoming.reviewCount;
   if (incoming.isIndependent != null) data.isIndependent = incoming.isIndependent;
@@ -220,6 +222,7 @@ export function toBusinessListItem(business: BusinessWithSources): BusinessListI
     lat: business.lat,
     lng: business.lng,
     phone: business.phone,
+    photoUrl: business.photoUrl,
     rating: business.rating,
     reviewCount: business.reviewCount,
     isIndependent: business.isIndependent,
