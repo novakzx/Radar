@@ -41,7 +41,12 @@ export async function startCheckoutAction(): Promise<StartCheckoutState> {
   try {
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "payment",
-      payment_method_types: ["card"],
+      // A conta usa "Managed Payments" (padrão em contas novas do
+      // Stripe), que exige `tax_code` no produto e não aceita
+      // `payment_method_types` explícito. Como isso é uma cobrança de
+      // acesso digital simples (sem cálculo de imposto por produto),
+      // desligamos Managed Payments apenas nesta sessão.
+      managed_payments: { enabled: false },
       line_items: [
         {
           price_data: {
