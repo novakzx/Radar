@@ -25,4 +25,11 @@ describe("buildWhatsAppUrl", () => {
   it("é determinística: mesma entrada produz sempre a mesma saída", () => {
     expect(buildWhatsAppUrl("+351 911 914 981")).toBe(buildWhatsAppUrl("+351 911 914 981"));
   });
+
+  it("usa apenas o primeiro número quando há vários separados por ; , ou /", () => {
+    expect(buildWhatsAppUrl("+351 213 912 860;+351 919 231 646")).toBe(
+      "https://wa.me/351213912860",
+    );
+    expect(buildWhatsAppUrl("351213912860,351919231646")).toBe("https://wa.me/351213912860");
+  });
 });

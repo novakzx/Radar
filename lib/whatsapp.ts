@@ -7,7 +7,10 @@
 export function buildWhatsAppUrl(phone: string | null | undefined, message?: string): string | null {
   if (!phone) return null;
 
-  const digits = phone.replace(/\D/g, "");
+  // OSM separa múltiplos telefones com ";" (às vezes "," ou "/"). Usamos
+  // apenas o primeiro para não concatenar dois números num só.
+  const firstPhone = phone.split(/[;,/]/)[0] ?? phone;
+  const digits = firstPhone.replace(/\D/g, "");
   if (digits.length < 8) return null;
 
   const url = new URL(`https://wa.me/${digits}`);
