@@ -1,0 +1,197 @@
+// CodeVision Radar — Prisma schema
+// Provider: PostgreSQL (Neon / Vercel Postgres, serverless-friendly with connection pooling)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  admin
+  member
+}
+
+enum LeadStatus {
+  novo
+  contactar
+  contactado
+  reuniao
+  proposta
+  cliente
+  nao_interessado
+}
+
+enum SearchStatus {
+  queued
+  running
+  done
+  error
+}
+
+enum SearchStep {
+  geocoding
+  fetching
+  verifying_websites
+  scoring
+}
+
+enum StepStatus {
+  pending
+  running
+  done
+  error
+}
+
+enum BusinessSourceType {
+  osm
+  google_places
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         Role     @default(member)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  leads      Lead[]
+  leadNotes  LeadNote[]
+  searches   Search[]
+  auditLogs  AuditLog[]
+
+  @@map("users")
+}
+
+model Business {
+  id            String   @id @default(cuid())
+  name          String
+  category      String?
+  address       String?
+  city          String?
+  lat           Float?
+  lng           Float?
+  phone         String?
+  website       String?
+  rating        Float?
+  reviewCount   Int?     @map("review_count")
+  isIndependent Boolean? @map("is_independent")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  sources       BusinessSource[]
+  leads         Lead[]
+  searchResults SearchResult[]
+
+  @@index([city])
+  @@index([category])
+  @@index([lat, lng])
+  @@index([website])
+  @@map("businesses")
+}
+
+model BusinessSource {
+  id         String             @id @default(cuid())
+  businessId String             @map("business_id")
+  source     BusinessSourceType
+  sourceId   String             @map("source_id")
+  rawPayload Json               @map("raw_payload")
+  fetchedAt  DateTime           @default(now()) @map("fetched_at")
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([source, sourceId])
+  @@map("business_sources")
+}
+
+model Lead {
+  id             String     @id @default(cuid())
+  businessId     String     @map("business_id")
+  ownerId        String?    @map("owner_id")
+  status         LeadStatus @default(novo)
+  potentialValue Float?     @map("potential_value")
+  contactDate    DateTime?  @map("contact_date")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  owner    User?    @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  notes    LeadNote[]
+  tags     LeadTag[]
+
+  @@index([status])
+  @@map("leads")
+}
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  leadId    String   @map("lead_id")
+  authorId  String   @map("author_id")
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  lead   Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("lead_notes")
+}
+
+model LeadTag {
+  id     String @id @default(cuid())
+  leadId String @map("lead_id")
+  tag    String
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@map("lead_tags")
+}
+
+model Search {
+  id         String       @id @default(cuid())
+  userId     String       @map("user_id")
+  location   String
+  radiusKm   Float        @map("radius_km")
+  category   String?
+  keyword    String?
+  status     SearchStatus @default(queued)
+  step       SearchStep   @default(geocoding)
+  progress   Json         @default("{}")
+  createdAt  DateTime     @default(now()) @map("created_at")
+  finishedAt DateTime?    @map("finished_at")
+
+  user    User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  results SearchResult[]
+
+  @@index([createdAt])
+  @@map("searches")
+}
+
+model SearchResult {
+  id         String @id @default(cuid())
+  searchId   String @map("search_id")
+  businessId String @map("business_id")
+
+  search   Search   @relation(fields: [searchId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([searchId, businessId])
+  @@map("search_results")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?  @map("user_id")
+  action    String
+  entity    String
+  entityId  String?  @map("entity_id")
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
