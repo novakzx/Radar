@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LogoutButton } from "@/components/shared/logout-button";
@@ -32,15 +34,35 @@ export function DashboardNav({ email, role }: DashboardNavProps) {
     <>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-6">
-          <Link href="/dashboard" className="shrink-0 font-semibold tracking-tight">
+          <Link
+            href="/dashboard"
+            className="shrink-0 font-semibold tracking-tight transition-transform hover:scale-105"
+          >
             AreaVon
           </Link>
-          <nav className="hidden items-center gap-4 text-sm text-muted-foreground sm:flex">
-            {NAV_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-foreground">
-                {link.label}
-              </Link>
-            ))}
+          <nav className="hidden items-center gap-1 text-sm text-muted-foreground sm:flex">
+            {NAV_LINKS.map((link) => {
+              const active = pathname.startsWith(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "relative rounded-md px-3 py-1.5 transition-colors",
+                    active ? "text-foreground" : "hover:text-foreground",
+                  )}
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="dashboard-nav-active"
+                      className="absolute inset-0 rounded-md bg-muted"
+                      transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                    />
+                  )}
+                  <span className="relative">{link.label}</span>
+                </Link>
+              );
+            })}
           </nav>
         </div>
 

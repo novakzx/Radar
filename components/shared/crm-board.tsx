@@ -97,7 +97,7 @@ export function CrmBoard({ initialBoard }: CrmBoardProps) {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 overflow-x-auto sm:grid-cols-2 lg:grid-flow-col lg:auto-cols-[260px]">
+      <div className="grid grid-cols-1 gap-4 overflow-x-auto sm:grid-cols-2 lg:grid-cols-none lg:grid-flow-col lg:auto-cols-[260px]">
         {LEAD_STATUS_ORDER.map((status) => (
           <div
             key={status}
@@ -131,7 +131,7 @@ export function CrmBoard({ initialBoard }: CrmBoardProps) {
                   onDragStart={() => setDraggingId(lead.id)}
                   onDragEnd={() => setDraggingId(null)}
                   className={cn(
-                    "cursor-grab rounded-md border border-border bg-background p-3 text-sm shadow-sm active:cursor-grabbing",
+                    "cursor-grab rounded-md border border-border bg-background p-3 text-sm shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-md active:cursor-grabbing",
                     draggingId === lead.id && "opacity-40",
                   )}
                 >

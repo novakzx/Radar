@@ -27,6 +27,11 @@ const line = {
 export function Hero() {
   return (
     <section className="relative flex flex-col items-center justify-center gap-6 overflow-hidden px-4 py-16 text-center sm:min-h-screen sm:gap-10 sm:px-6 sm:py-24">
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden>
+        <div className="animate-drift absolute top-[-10%] left-[10%] size-72 rounded-full bg-status-success/20 blur-[100px] sm:size-96" />
+        <div className="animate-drift-slow absolute right-[8%] bottom-[-15%] size-72 rounded-full bg-primary/15 blur-[100px] sm:size-[28rem]" />
+      </div>
+
       <span className="text-xs font-medium uppercase tracking-[0.3em] text-muted-foreground">
         AreaVon
       </span>
