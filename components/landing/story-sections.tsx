@@ -73,10 +73,12 @@ export function HowItWorksSection() {
       <div className="mt-12 grid gap-6 sm:grid-cols-2">
         {STEPS.map((step, index) => (
           <ScrollReveal key={step.title} delay={index * 0.08}>
-            <div className="group h-full rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-foreground/20 hover:shadow-lg">
-              <step.icon className="size-6 text-muted-foreground transition-colors duration-300 group-hover:text-foreground" />
-              <h3 className="mt-4 font-semibold">{step.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{step.description}</p>
+            <div className="group h-full rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-signal-blue/40 hover:shadow-[0_0_32px_-8px_rgba(0,122,252,0.35)]">
+              <div className="flex size-11 items-center justify-center rounded-xl bg-signal-blue/10 text-signal-blue transition-colors duration-300 group-hover:bg-signal-blue group-hover:text-white">
+                <step.icon className="size-5" />
+              </div>
+              <h3 className="mt-4 font-semibold text-white">{step.title}</h3>
+              <p className="mt-1 text-sm text-fog">{step.description}</p>
             </div>
           </ScrollReveal>
         ))}

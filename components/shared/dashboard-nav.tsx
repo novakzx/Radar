@@ -48,14 +48,14 @@ export function DashboardNav({ email, role }: DashboardNavProps) {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "relative rounded-md px-3 py-1.5 transition-colors",
-                    active ? "text-foreground" : "hover:text-foreground",
+                    "relative rounded-full px-3.5 py-1.5 transition-colors",
+                    active ? "text-white" : "hover:text-foreground",
                   )}
                 >
                   {active && (
                     <motion.span
                       layoutId="dashboard-nav-active"
-                      className="absolute inset-0 rounded-md bg-muted"
+                      className="absolute inset-0 rounded-full bg-signal-blue"
                       transition={{ type: "spring", stiffness: 400, damping: 32 }}
                     />
                   )}
@@ -95,9 +95,9 @@ export function DashboardNav({ email, role }: DashboardNavProps) {
                 href={link.href}
                 onClick={() => setOpen(false)}
                 className={
-                  "rounded-md px-3 py-2 " +
+                  "rounded-full px-3.5 py-2 " +
                   (pathname.startsWith(link.href)
-                    ? "bg-muted text-foreground"
+                    ? "bg-signal-blue text-white"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground")
                 }
               >

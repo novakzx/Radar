@@ -15,19 +15,19 @@ export default function OpengraphImage() {
           alignItems: "center",
           justifyContent: "center",
           gap: 24,
-          background: "#0a0a0a",
-          color: "#fafafa",
+          background: "#0e1012",
+          color: "#ffffff",
           fontFamily: "sans-serif",
           padding: 80,
         }}
       >
-        <div style={{ fontSize: 28, letterSpacing: 6, color: "#a1a1aa", textTransform: "uppercase" }}>
+        <div style={{ fontSize: 28, letterSpacing: 6, color: "#007afc", textTransform: "uppercase" }}>
           AreaVon
         </div>
         <div style={{ fontSize: 56, fontWeight: 700, textAlign: "center", lineHeight: 1.15 }}>
           Encontre empresas com website não encontrado na fonte consultada
         </div>
-        <div style={{ fontSize: 26, color: "#a1a1aa", textAlign: "center" }}>
+        <div style={{ fontSize: 26, color: "#a0aaba", textAlign: "center" }}>
           Prospecção comercial determinística — sem IA
         </div>
       </div>
