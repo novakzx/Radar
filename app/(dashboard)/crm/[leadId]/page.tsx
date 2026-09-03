@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, AtSign, ExternalLink, Phone, Star } from "lucide-react";
+import { ArrowLeft, AtSign, ExternalLink, MessageCircle, Phone, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { verifySession } from "@/lib/dal";
 import { getLeadDetail } from "@/services/LeadService";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { LeadStatusSelect } from "@/components/shared/lead-status-select";
 import { LeadTags } from "@/components/shared/lead-tags";
 import { LeadNotes } from "@/components/shared/lead-notes";
@@ -37,6 +38,10 @@ export default async function LeadDetailPage(props: PageProps<"/crm/[leadId]">) 
   if (!lead) notFound();
 
   const { business } = lead;
+  const whatsappUrl = buildWhatsAppUrl(
+    business.phone,
+    `Olá! Vi a ${business.name} através do AreaVon e gostaria de conversar.`,
+  );
 
   return (
     <div className="space-y-6">
@@ -155,6 +160,17 @@ export default async function LeadDetailPage(props: PageProps<"/crm/[leadId]">) 
                     <Phone className="size-4" />
                     {business.phone}
                   </span>
+                )}
+                {whatsappUrl && (
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-1 text-status-success underline underline-offset-2"
+                  >
+                    <MessageCircle className="size-4" />
+                    Chamar no WhatsApp
+                  </a>
                 )}
                 {business.rating != null && (
                   <span className="flex items-center gap-1">

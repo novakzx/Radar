@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   title: {
-    default: "CodeVision Radar",
-    template: "%s · CodeVision Radar",
+    default: "AreaVon",
+    template: "%s · AreaVon",
   },
   description:
     "Prospecção comercial determinística: encontre empresas sem website identificado nas fontes públicas e priorize leads com um Lead Score transparente.",

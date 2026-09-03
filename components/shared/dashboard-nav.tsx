@@ -33,7 +33,7 @@ export function DashboardNav({ email, role }: DashboardNavProps) {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-6">
           <Link href="/dashboard" className="shrink-0 font-semibold tracking-tight">
-            CodeVision Radar
+            AreaVon
           </Link>
           <nav className="hidden items-center gap-4 text-sm text-muted-foreground sm:flex">
             {NAV_LINKS.map((link) => (

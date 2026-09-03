@@ -1,7 +1,8 @@
-import { AtSign, ExternalLink, Phone, Star } from "lucide-react";
+import { AtSign, ExternalLink, MessageCircle, Phone, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SaveLeadButton } from "@/components/shared/save-lead-button";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import type { BusinessListItem } from "@/types/business";
 
 const CONFIDENCE_LABEL: Record<string, string> = {
@@ -23,6 +24,10 @@ const SOURCE_LABEL: Record<string, string> = {
 
 export function BusinessResultCard({ business }: { business: BusinessListItem }) {
   const { websiteVerification, leadScore } = business;
+  const whatsappUrl = buildWhatsAppUrl(
+    business.phone,
+    `Olá! Vi a ${business.name} através do AreaVon e gostaria de conversar.`,
+  );
 
   const websiteBadgeClass = websiteVerification.found
     ? "border-status-success/30 bg-status-success/15 text-status-success"
@@ -86,6 +91,18 @@ export function BusinessResultCard({ business }: { business: BusinessListItem })
               <Phone className="size-3" />
               {business.phone}
             </span>
+          )}
+          {whatsappUrl && (
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(event) => event.stopPropagation()}
+              className="flex items-center gap-1 text-status-success underline underline-offset-2"
+            >
+              <MessageCircle className="size-3" />
+              WhatsApp
+            </a>
           )}
           {business.rating != null && (
             <span className="flex items-center gap-1">

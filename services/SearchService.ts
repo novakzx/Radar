@@ -72,11 +72,14 @@ async function updateProgress(
  * client faz polling e nunca vê um tempo de espera simulado.
  */
 export async function runSearchPipeline(searchId: string): Promise<void> {
+  let currentStep: SearchStepKey = "geocoding";
+
   try {
     const search = await prisma.search.findUniqueOrThrow({ where: { id: searchId } });
     await prisma.search.update({ where: { id: searchId }, data: { status: "running" } });
 
     // 1) Geocoding
+    currentStep = "geocoding";
     await updateProgress(searchId, "geocoding", "running");
     const geo = await geocodeLocation(search.location);
     if (!geo) {
@@ -89,6 +92,7 @@ export async function runSearchPipeline(searchId: string): Promise<void> {
     await updateProgress(searchId, "geocoding", "done");
 
     // 2) Fetching (Overpass + Google Places opcional)
+    currentStep = "fetching";
     await updateProgress(searchId, "fetching", "running");
     const radiusMeters = search.radiusKm * 1000;
 
@@ -135,12 +139,14 @@ export async function runSearchPipeline(searchId: string): Promise<void> {
     // 3) Verificação de website — já computada durante o upsert
     // (BusinessService.recomputeWebsiteStatus), de forma determinística
     // a partir de todas as fontes persistidas para cada empresa.
+    currentStep = "verifying_websites";
     await updateProgress(searchId, "verifying_websites", "running");
     await updateProgress(searchId, "verifying_websites", "done");
 
     // 4) Scoring — o Lead Score é sempre calculado on-demand na
     // leitura (LeadScoringService), nunca armazenado como valor
     // estático, para refletir sempre o estado atual dos dados.
+    currentStep = "scoring";
     await updateProgress(searchId, "scoring", "running");
     await updateProgress(searchId, "scoring", "done", {
       status: "done",
@@ -155,10 +161,17 @@ export async function runSearchPipeline(searchId: string): Promise<void> {
       metadata: { businessCount: businessIds.length },
     });
   } catch (error) {
-    console.error("[SearchService] pipeline falhou", error);
-    await prisma.search
-      .update({ where: { id: searchId }, data: { status: "error", finishedAt: new Date() } })
-      .catch(() => {});
+    console.error(`[SearchService] pipeline falhou na etapa "${currentStep}"`, error);
+    await updateProgress(searchId, currentStep, "error", {
+      status: "error",
+      finishedAt: new Date(),
+    }).catch(() => {
+      // Última tentativa, mesmo sem saber o progresso exato: garante
+      // que a busca nunca fique "running" para sempre na UI.
+      return prisma.search
+        .update({ where: { id: searchId }, data: { status: "error", finishedAt: new Date() } })
+        .catch(() => {});
+    });
   }
 }
 

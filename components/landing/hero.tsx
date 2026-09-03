@@ -28,7 +28,7 @@ export function Hero() {
   return (
     <section className="relative flex flex-col items-center justify-center gap-6 overflow-hidden px-4 py-16 text-center sm:min-h-screen sm:gap-10 sm:px-6 sm:py-24">
       <span className="text-xs font-medium uppercase tracking-[0.3em] text-muted-foreground">
-        CodeVision Radar
+        AreaVon
       </span>
 
       <motion.h1

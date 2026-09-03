@@ -6,11 +6,11 @@ import { FinalCtaSection } from "@/components/landing/final-cta-section";
 import { LandingFooter } from "@/components/landing/footer";
 
 export const metadata: Metadata = {
-  title: "CodeVision Radar",
+  title: "AreaVon",
   description:
     "Prospecção comercial determinística, sem IA: encontre empresas com website não encontrado na fonte consultada e priorize leads com um Lead Score transparente.",
   openGraph: {
-    title: "CodeVision Radar",
+    title: "AreaVon",
     description:
       "Prospecção comercial determinística, sem IA: encontre empresas com website não encontrado na fonte consultada.",
     type: "website",

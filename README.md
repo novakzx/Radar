@@ -1,6 +1,6 @@
-# CodeVision Radar
+# AreaVon
 
-Radar de prospecção comercial **100% determinístico** para a equipe da CodeVision: pesquisa
+Radar de prospecção comercial **100% determinístico** para a equipe da AreaVon: pesquisa
 empresas de uma região, identifica quais têm **website não encontrado na fonte pública
 consultada** e prioriza os leads mais promissores com um **Lead Score transparente e auditável**
 — tudo isso num CRM interno em kanban.
@@ -221,4 +221,4 @@ npm run build
 
 ## Licença
 
-Uso interno — CodeVision.
+Uso interno — AreaVon.

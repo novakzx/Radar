@@ -11,7 +11,7 @@ export default function LoginPage() {
     <Card>
       <CardHeader>
         <CardTitle>Entrar</CardTitle>
-        <CardDescription>Acesse o radar de prospecção da CodeVision.</CardDescription>
+        <CardDescription>Acesse o radar de prospecção da AreaVon.</CardDescription>
       </CardHeader>
       <CardContent>
         <LoginForm />

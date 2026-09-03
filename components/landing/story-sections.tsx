@@ -17,7 +17,7 @@ export function ProblemSection() {
       </ScrollReveal>
       <ScrollReveal delay={0.2}>
         <p className="mt-4 max-w-2xl text-muted-foreground">
-          O CodeVision Radar nunca afirma que uma empresa &quot;não tem site&quot; — a ausência do
+          O AreaVon nunca afirma que uma empresa &quot;não tem site&quot; — a ausência do
           dado numa fonte pública não prova a ausência real. Por isso falamos sempre em{" "}
           <span className="text-foreground">
             &quot;website não encontrado na fonte consultada&quot;

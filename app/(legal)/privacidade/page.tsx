@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Política de Privacidade",
-  description: "Como o CodeVision Radar trata dados de contas e de estabelecimentos públicos.",
+  description: "Como o AreaVon trata dados de contas e de estabelecimentos públicos.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -13,7 +13,7 @@ export default function PrivacyPolicyPage() {
 
       <h2>1. Quem somos</h2>
       <p>
-        O CodeVision Radar é uma ferramenta interna de prospecção comercial. Este documento
+        O AreaVon é uma ferramenta interna de prospecção comercial. Este documento
         descreve, de forma transparente, quais dados tratamos e como.
       </p>
 

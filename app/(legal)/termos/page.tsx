@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Termos de Uso",
-  description: "Condições de uso do CodeVision Radar.",
+  description: "Condições de uso do AreaVon.",
 };
 
 export default function TermsOfUsePage() {
@@ -13,7 +13,7 @@ export default function TermsOfUsePage() {
 
       <h2>1. Aceitação</h2>
       <p>
-        Ao criar uma conta e usar o CodeVision Radar, você concorda com estes Termos e com a{" "}
+        Ao criar uma conta e usar o AreaVon, você concorda com estes Termos e com a{" "}
         <a href="/privacidade" className="underline underline-offset-2">
           Política de Privacidade
         </a>
@@ -29,7 +29,7 @@ export default function TermsOfUsePage() {
 
       <h2>3. Sobre o status de website</h2>
       <p>
-        O CodeVision Radar nunca afirma que uma empresa não possui website. A ausência de um
+        O AreaVon nunca afirma que uma empresa não possui website. A ausência de um
         campo de website nas fontes públicas consultadas não prova a ausência real de um site —
         por isso o produto sempre comunica isso como{" "}
         <strong>&quot;website não encontrado na fonte consultada&quot;</strong>.
@@ -51,7 +51,7 @@ export default function TermsOfUsePage() {
       <h2>6. Limitação de responsabilidade</h2>
       <p>
         Os dados exibidos vêm de fontes públicas de terceiros (OpenStreetMap, Google Places) e
-        podem estar desatualizados ou incompletos. O CodeVision Radar não garante a exatidão
+        podem estar desatualizados ou incompletos. O AreaVon não garante a exatidão
         absoluta das informações exibidas.
       </p>
 

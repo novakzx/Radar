@@ -58,7 +58,7 @@ export function generateLeadsCsv(leads: LeadDetailItem[]): string {
 /** Gera um arquivo .xlsx (buffer) dos leads informados. */
 export async function generateLeadsXlsx(leads: LeadDetailItem[]): Promise<Buffer> {
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = "CodeVision Radar";
+  workbook.creator = "AreaVon";
   workbook.created = new Date();
 
   const sheet = workbook.addWorksheet("Leads");

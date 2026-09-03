@@ -6,7 +6,7 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-background">
       <header className="border-b border-border px-6 py-4">
         <Link href="/" className="font-semibold tracking-tight">
-          CodeVision Radar
+          AreaVon
         </Link>
       </header>
       <main className="mx-auto max-w-3xl px-6 py-16">

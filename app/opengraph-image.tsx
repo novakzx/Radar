@@ -22,7 +22,7 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ fontSize: 28, letterSpacing: 6, color: "#a1a1aa", textTransform: "uppercase" }}>
-          CodeVision Radar
+          AreaVon
         </div>
         <div style={{ fontSize: 56, fontWeight: 700, textAlign: "center", lineHeight: 1.15 }}>
           Encontre empresas com website não encontrado na fonte consultada

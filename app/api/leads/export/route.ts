@@ -40,7 +40,7 @@ export async function GET(request: Request) {
       metadata: { count: leads.length, format },
     });
 
-    const filename = `leads-codevision-radar-${new Date().toISOString().slice(0, 10)}.${format}`;
+    const filename = `leads-areavon-${new Date().toISOString().slice(0, 10)}.${format}`;
 
     if (format === "xlsx") {
       const buffer = await generateLeadsXlsx(leads);
