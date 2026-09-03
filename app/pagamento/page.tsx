@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { verifySession } from "@/lib/dal";
 import { userHasPaidAccess } from "@/services/PaymentService";
 import { requiresPayment } from "@/lib/payment-gate";
+import { isEmailVerified } from "@/services/EmailVerificationService";
+import { requiresEmailVerification } from "@/lib/email-verification-gate";
 import { LogoutButton } from "@/components/shared/logout-button";
 import { CheckoutButton } from "@/components/shared/checkout-button";
 
@@ -23,6 +25,13 @@ const UNLOCKS = [
 
 export default async function PagamentoPage(props: PageProps<"/pagamento">) {
   const session = await verifySession();
+
+  // Defesa em profundidade: mesma ordem do layout do dashboard — não
+  // faz sentido cobrar antes de confirmar o e-mail.
+  const emailVerified = session.user.role === "admin" ? true : await isEmailVerified(session.user.id);
+  if (requiresEmailVerification({ role: session.user.role, emailVerified })) {
+    redirect("/verificar-email");
+  }
 
   // Admin e quem já pagou não precisam ver esta página.
   const hasPaid = session.user.role === "admin" ? true : await userHasPaidAccess(session.user.id);
@@ -70,6 +79,13 @@ export default async function PagamentoPage(props: PageProps<"/pagamento">) {
             <div className="flex justify-center border-t border-border pt-6">
               <CheckoutButton />
             </div>
+
+            <p className="text-center text-xs text-muted-foreground">
+              Problemas com o pagamento?{" "}
+              <Link href="/suporte" className="underline underline-offset-2 hover:text-foreground">
+                Abrir um ticket com a equipe
+              </Link>
+            </p>
           </CardContent>
         </Card>
       </main>

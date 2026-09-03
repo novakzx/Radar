@@ -14,7 +14,11 @@ export type AuditAction =
   | "leads.export"
   | "payment.checkout_started"
   | "payment.completed"
-  | "payment.failed";
+  | "payment.failed"
+  | "auth.email_verified"
+  | "ticket.create"
+  | "ticket.claim"
+  | "ticket.resolve";
 
 /**
  * Registra uma ação relevante para auditoria. Nunca lança erro para o

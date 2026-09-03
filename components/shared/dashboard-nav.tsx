@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LogoutButton } from "@/components/shared/logout-button";
 
-const NAV_LINKS = [
+const BASE_NAV_LINKS = [
   { href: "/radar", label: "Radar" },
   { href: "/crm", label: "CRM" },
   { href: "/equipe", label: "Equipe" },
@@ -19,6 +19,7 @@ const NAV_LINKS = [
 interface DashboardNavProps {
   email: string;
   role: string;
+  unreadTickets?: number;
 }
 
 /**
@@ -26,9 +27,14 @@ interface DashboardNavProps {
  * menu hambúrguer em telas pequenas (evita o overflow horizontal que
  * o nome + nav + e-mail + badge causavam lado a lado no mobile).
  */
-export function DashboardNav({ email, role }: DashboardNavProps) {
+export function DashboardNav({ email, role, unreadTickets = 0 }: DashboardNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+
+  const navLinks =
+    role === "admin"
+      ? [...BASE_NAV_LINKS, { href: "/admin/tickets", label: "Tickets" }]
+      : BASE_NAV_LINKS;
 
   return (
     <>
@@ -41,14 +47,14 @@ export function DashboardNav({ email, role }: DashboardNavProps) {
             AreaVon
           </Link>
           <nav className="hidden items-center gap-1 text-sm text-muted-foreground sm:flex">
-            {NAV_LINKS.map((link) => {
+            {navLinks.map((link) => {
               const active = pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "relative rounded-full px-3.5 py-1.5 transition-colors",
+                    "relative flex items-center gap-1.5 rounded-full px-3.5 py-1.5 transition-colors",
                     active ? "text-white" : "hover:text-foreground",
                   )}
                 >
@@ -60,6 +66,11 @@ export function DashboardNav({ email, role }: DashboardNavProps) {
                     />
                   )}
                   <span className="relative">{link.label}</span>
+                  {link.href === "/admin/tickets" && unreadTickets > 0 && (
+                    <span className="relative flex size-4 items-center justify-center rounded-full bg-status-error text-[10px] font-semibold text-white">
+                      {unreadTickets > 9 ? "9+" : unreadTickets}
+                    </span>
+                  )}
                 </Link>
               );
             })}
@@ -71,6 +82,9 @@ export function DashboardNav({ email, role }: DashboardNavProps) {
           <Badge variant="secondary" className="capitalize">
             {role}
           </Badge>
+          <Link href="/suporte" className="text-sm text-muted-foreground hover:text-foreground">
+            Suporte
+          </Link>
           <LogoutButton />
         </div>
 
@@ -89,21 +103,33 @@ export function DashboardNav({ email, role }: DashboardNavProps) {
       {open && (
         <div className="border-t border-border px-4 py-4 sm:hidden">
           <nav className="flex flex-col gap-1 text-sm">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
                 className={
-                  "rounded-full px-3.5 py-2 " +
+                  "flex items-center gap-1.5 rounded-full px-3.5 py-2 " +
                   (pathname.startsWith(link.href)
                     ? "bg-signal-blue text-white"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground")
                 }
               >
                 {link.label}
+                {link.href === "/admin/tickets" && unreadTickets > 0 && (
+                  <span className="flex size-4 items-center justify-center rounded-full bg-status-error text-[10px] font-semibold text-white">
+                    {unreadTickets > 9 ? "9+" : unreadTickets}
+                  </span>
+                )}
               </Link>
             ))}
+            <Link
+              href="/suporte"
+              onClick={() => setOpen(false)}
+              className="rounded-full px-3.5 py-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              Suporte
+            </Link>
           </nav>
           <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
             <div className="min-w-0">

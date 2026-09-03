@@ -58,6 +58,12 @@ enum PaymentStatus {
   failed
 }
 
+enum TicketStatus {
+  aberto
+  em_atendimento
+  resolvido
+}
+
 model User {
   id               String   @id @default(cuid())
   email            String   @unique
@@ -66,16 +72,74 @@ model User {
   createdAt        DateTime @default(now()) @map("created_at")
   hasPaid          Boolean  @default(false) @map("has_paid")
   stripeCustomerId String?  @map("stripe_customer_id")
+  emailVerified    Boolean  @default(false) @map("email_verified")
 
-  leads         Lead[]
-  leadNotes     LeadNote[]
-  searches      Search[]
-  auditLogs     AuditLog[]
-  teamMessages  TeamMessage[]
-  teamReminders TeamReminder[]
-  payments      Payment[]
+  leads                   Lead[]
+  leadNotes               LeadNote[]
+  searches                Search[]
+  auditLogs               AuditLog[]
+  teamMessages            TeamMessage[]
+  teamReminders           TeamReminder[]
+  payments                Payment[]
+  emailVerificationCodes  EmailVerificationCode[]
+  ticketsOpened           Ticket[]      @relation("TicketAuthor")
+  ticketsClaimed          Ticket[]      @relation("TicketClaimedBy")
+  ticketReplies           TicketReply[]
 
   @@map("users")
+}
+
+/// Código numérico de 6 dígitos enviado por e-mail no cadastro. Guardado
+/// com hash (nunca em texto puro) e com expiração curta — o mesmo
+/// padrão de segurança usado para senha (ver lib/password.ts).
+model EmailVerificationCode {
+  id         String    @id @default(cuid())
+  userId     String    @map("user_id")
+  codeHash   String    @map("code_hash")
+  expiresAt  DateTime  @map("expires_at")
+  consumedAt DateTime? @map("consumed_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("email_verification_codes")
+}
+
+/// Chamado de suporte aberto por qualquer usuário logado (mesmo sem ter
+/// pago ainda — é o canal certo pra reportar justamente problemas de
+/// pagamento/acesso) com a administração do site.
+model Ticket {
+  id          String       @id @default(cuid())
+  authorId    String       @map("author_id")
+  subject     String
+  message     String
+  status      TicketStatus @default(aberto)
+  isRead      Boolean      @default(false) @map("is_read")
+  claimedById String?      @map("claimed_by_id")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  author    User          @relation("TicketAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  claimedBy User?         @relation("TicketClaimedBy", fields: [claimedById], references: [id], onDelete: SetNull)
+  replies   TicketReply[]
+
+  @@index([status])
+  @@index([isRead])
+  @@map("tickets")
+}
+
+model TicketReply {
+  id        String   @id @default(cuid())
+  ticketId  String   @map("ticket_id")
+  authorId  String   @map("author_id")
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("ticket_replies")
 }
 
 /// Pagamento único (€2) que libera o acesso aos painéis. O acesso só é
